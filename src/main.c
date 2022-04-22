@@ -1,6 +1,7 @@
 /*
 * Author: Stundner Marco
 * Filename: main.c
+* Task: Parallel Image Filter
 * Date 20.04.22
 */
 
@@ -13,6 +14,33 @@
 #include <stdbool.h>
 #include <unistd.h>
 #include <limits.h>
+#include "readimg.h"
+
+struct pixel 
+{
+	int r;
+	int g;
+	int b;
+};
+
+struct workPackage {
+    struct pixel pixels[3][3];  // pixels to multiply with the kernel
+    unsigned int pixel_index;   // linear index of the pixel
+                                // (i.e., y*width+x) to be processed
+                                // (for identifying the result)
+};
+
+struct resultPackage {
+    struct pixel pixel;         // result of matrix multiplication of kernel and pixels from workPackage
+    unsigned int pixel_index;   // linear index of the pixel
+                                // (i.e., y*width+x) to be processed
+                                // (for identifying the result)
+};
+
+/*
+*MSG queue erstellen
+*
+*/
 
 void print_help (void);
 
@@ -44,7 +72,8 @@ int main(int argc, char **argv)
 			oarg = optarg;
 			break;
 		case 'h': 
-			print_help();
+			write_ppm();
+			//print_help();
 			break;
 		case ':':
 			fprintf (stderr, "Option requires an argument.\n");
@@ -56,8 +85,9 @@ int main(int argc, char **argv)
 		}
 	}
 	for (; optind < argc; optind++)
+	{
 		printf ("Positional argument %d: %s\n", optind, argv[optind]);
-
+	}
 	
 	return 0;
 }
