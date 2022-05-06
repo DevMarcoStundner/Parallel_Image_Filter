@@ -14,13 +14,15 @@
 #include <stdbool.h>
 #include <unistd.h>
 #include <limits.h>
+#include <malloc.h>
 #include "readimg.h"
+
 
 struct pixel 
 {
-	int r;
-	int g;
-	int b;
+	char r;
+	char g;
+	char b;
 };
 
 struct workPackage {
@@ -37,22 +39,27 @@ struct resultPackage {
                                 // (for identifying the result)
 };
 
-/*
-*MSG queue erstellen
-*
-*/
 
 void print_help (void);
 
 int main(int argc, char **argv) 
 {
     int opt;
-	const char *iarg = NULL;
+	char *input_img = (char *) calloc(38,sizeof(char));
+	if(input_img == NULL)
+	{
+		printf("Memory not allocated");
+		exit(EXIT_FAILURE);
+	}
+	/* printf("input_img: %zu\n",sizeof(input_img));
+	printf("char: %zu\n",sizeof(char)); */
+
+	/* const char *iarg = NULL;
 	const char *oarg = NULL;
     const char *karg = NULL;
-	const char *parg = NULL;
+	const char *parg = NULL; */
 
-	if (argc == 1) {
+	/* if (argc == 1) {
 		fprintf (stderr, "This program needs arguments....\n\n");
 		print_help();
 	}
@@ -60,19 +67,51 @@ int main(int argc, char **argv)
 	while ( (opt = getopt (argc, argv, "p:k:i:o:h")) != -1) {
 		switch (opt) {
 		case 'p':
-			parg = optarg;
+			//parg = optarg;
 			break;
 		case 'k':
-			karg = optarg;
+		//	karg = optarg;
 			break;
         case 'i':
-			iarg = optarg;
+		//	iarg = optarg;
 			break;
         case 'o':
-			oarg = optarg;
+		//	oarg = optarg;
 			break;
 		case 'h': 
-			write_ppm();
+			/* char ppmdata[] =
+			{
+				'P','6','\n',
+				'3',' ','3','\n',
+				'2','5','5','\n',
+				255,0,0,     //rot
+				255,128,0,   //orange
+				255,255,0,   //gelb
+				128,255,0,   //gruen
+				0,255,255,   //tuerkis
+				0,0,255,     //blau 
+				255,0,0,     //rot
+				255,128,0,   //orange
+				255,255,0,   //gelb
+  			};
+			int size = sizeof(ppmdata)/sizeof(ppmdata[0]);
+			FILE *pImg = fopen("img1.ppm","wb");
+			size_t r1 = fwrite(ppmdata,1,size,pImg);
+			//printf("\nwrote %zu elements",r1);
+			fclose(pImg); */
+
+			/*
+				Bei Vortschritt mal auf git hochladen
+
+			*/
+
+			read_ppm(input_img);
+			/* if(strcmp(ppmdata,input_img) != 0)
+			{
+				printf("Strings are not same size\n");
+			} 
+			write_ppm(input_img); 
+			
 			//print_help();
 			break;
 		case ':':
@@ -87,8 +126,11 @@ int main(int argc, char **argv)
 	for (; optind < argc; optind++)
 	{
 		printf ("Positional argument %d: %s\n", optind, argv[optind]);
-	}
+	} */
 	
+
+
+	free(input_img);
 	return 0;
 }
 
