@@ -29,6 +29,17 @@ struct pixel
 	char b;
 };
 
+struct msg {
+  int id;
+  struct pixel px[MSG];
+};
+
+struct DAT {
+  long mtype;
+  struct msg m;
+};
+
+
 struct workPackage {
     struct pixel pixels[3][3];  // pixels to multiply with the kernel
     unsigned int pixel_index;   // linear index of the pixel
@@ -141,6 +152,65 @@ int main(int argc, char *argv[])
 		printf("Couldn't create Queue Child -> Parent\n");
 		exit (EXIT_FAILURE);
 	}
+
+	ppid = getpid();
+	pid = 1;
+	for (int j = 1; j <= atoi (argv[1]); j++) {
+    if (pid > 0) {
+      pid = fork();
+      // -----------------------------------------------------------------------
+      // ---------------------------------------------------------------- CHILDs
+      // 
+      if (pid == 0) {
+        // receive data from PARENT
+        struct DAT crcvDat;
+        msgrcv (qP2C, &crcvDat, sizeof (struct DAT), j, 0); //takes msg from the queue
+
+		/*
+			Pixel einlesen und mit Filter mul
+		*/
+
+
+        msgsnd (qC2P, &c2pd, sizeof (struct DAT), 0);
+      }
+    }
+  }
+  // ---------------------------------------------------------------------------
+  // -------------------------------------------------------------------- PARENT
+  //
+  if (getpid() == ppid) {
+    struct DAT p2cd;
+    struct pixel px[MSG] = { {1, 2, 3}, {10, 20, 30}, {100, 110, 120}, {200, 210, 220}};
+    for (int k = 1; k <= atoi (argv[1]); k++) {
+      p2cd.mtype = k;
+      p2cd.m.px[k-1].r = px[k-1].r;
+      p2cd.m.px[k-1].g = px[k-1].g;
+      p2cd.m.px[k-1].b = px[k-1].b;
+
+      // send the msg
+      msgsnd (qP2C, &p2cd, sizeof (struct DAT), 0);
+    }
+
+    printf ("Go\n");
+
+    for (int k = 1; k <= atoi (argv[1]); k++) {
+      // receive a reply
+      struct DAT prcvDat;
+      msgrcv (qC2P, &prcvDat, sizeof (struct DAT), k, 0);
+      // output the received answer
+#if 1
+      printf ("Child %ld to Parent: %d %d %d\n", prcvDat.mtype, prcvDat.m.px[k].r,  prcvDat.m.px[k].g,  prcvDat.m.px[k].b);
+#endif
+    }
+    // wait for child process to terminate
+    if ( (waitpid (-1, NULL, 0)) < 0) {
+      perror ("waitpid");
+      exit (EXIT_FAILURE);
+    }
+    // remove the message queues
+    msgctl (qP2C, IPC_RMID, NULL);
+    msgctl (qC2P, IPC_RMID, NULL);
+  }
 
 
 	free(input_img);
