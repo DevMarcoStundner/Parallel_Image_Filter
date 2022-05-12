@@ -13,7 +13,6 @@
 #include <stdio.h>
 #include <string.h>
 #include <stdlib.h>
-#include <stdbool.h>
 #include <unistd.h>
 #include <limits.h>
 #include <malloc.h>
@@ -39,20 +38,6 @@ struct DAT {
   struct msg m;
 };
 
-
-struct workPackage {
-    struct pixel pixels[3][3];  // pixels to multiply with the kernel
-    unsigned int pixel_index;   // linear index of the pixel
-                                // (i.e., y*width+x) to be processed
-                                // (for identifying the result)
-};
-
-struct resultPackage {
-    struct pixel pixel;         // result of matrix multiplication of kernel and pixels from workPackage
-    unsigned int pixel_index;   // linear index of the pixel
-                                // (i.e., y*width+x) to be processed
-                                // (for identifying the result)
-};
 
 
 void print_help (void);
@@ -137,6 +122,9 @@ int main(int argc, char *argv[])
 	read_ppm (pImg1, input_img, x, y);
 	fclose(pImg1);
 
+
+
+
 	//Queue Parent to Child
 	qP2C = msgget(IPC_PRIVATE, IPC_CREAT | 0666);
 	if(qP2C == -1)
@@ -180,7 +168,24 @@ int main(int argc, char *argv[])
   //
   if (getpid() == ppid) {
     struct DAT p2cd;
-    struct pixel px[MSG] = { {1, 2, 3}, {10, 20, 30}, {100, 110, 120}, {200, 210, 220}};
+    struct pixel px[x*y]; 
+	int m = 0;
+
+	for(int i = 0; i <= x*y; i++)
+	{
+		px[i].r = input_img[m];
+		m++;
+		px[i].g = input_img[m];
+		m++;
+		px[i].b = input_img[m];
+		m++;
+	}
+
+
+
+
+
+
     for (int k = 1; k <= atoi (argv[1]); k++) {
       p2cd.mtype = k;
       p2cd.m.px[k-1].r = px[k-1].r;

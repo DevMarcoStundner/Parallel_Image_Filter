@@ -25,10 +25,10 @@ void read_ppm (FILE *infile, char *p, int x, int y)
       end = 1;
     }
   }
-  // write the header
+  /* // write the header
   fprintf(pImg2, "P6\n");
   fprintf(pImg2, "%d %d\n%d", x, y, 255);
   // write the body
-  fwrite (p, sizeof (char), x*y*3, pImg2);
+  fwrite (p, sizeof (char), x*y*3, pImg2); */
   fclose (pImg2);
 }
