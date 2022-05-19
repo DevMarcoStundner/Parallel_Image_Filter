@@ -18,6 +18,7 @@
 #include <malloc.h>
 #include "readimg.h"
 
+
 #define len 80
 #define MSG 4
 
@@ -153,14 +154,19 @@ int main(int argc, char *argv[])
       if (pid == 0) {
         // receive data from PARENT
         struct DAT crcvDat;
-        msgrcv (qP2C, &crcvDat, sizeof (struct DAT), j, 0); //takes msg from the queue
+		struct DAT c2pd; 
+		//takes msg from the queue
+        msgrcv (qP2C, &crcvDat, sizeof (struct DAT), j, 0); 
 
-		/*
-			Pixel einlesen und mit Filter mul
-		*/
+		//px read
+		c2pd.m.px->r = crcvDat.m.px->r;
+		c2pd.m.px->g = crcvDat.m.px->g;
+		c2pd.m.px->b = crcvDat.m.px->b;
+
+		//mul with kernel
 
 
-       // msgsnd (qC2P, &c2pd, sizeof (struct DAT), 0);
+        msgsnd (qC2P, &c2pd, sizeof (struct DAT), 0);
       }
     }
   }
@@ -168,22 +174,22 @@ int main(int argc, char *argv[])
   // -------------------------------------------------------------------- PARENT
   //
   if (getpid() == ppid) {
-    struct DAT p2cd;
-    struct pixel px[x*y]; 
+    struct DAT p2cd; 
 	int m = 0;
+	int i = 0;
 
-	// saves img in rgb px
+	// saves img in p2cd
 	while (m != x*y)
 	{
-		int i = 0;
-		px->r = input_img[m];	
+		p2cd.m.px->r = input_img[m];	
 		m++;
-		px->g = input_img[m];
+		p2cd.m.px->g = input_img[m];
 		m++;
-		px->b = input_img[m];
+		p2cd.m.px->b = input_img[m];
 		m++;
+		p2cd.m.id = i;
 		i++;
-		msgsnd (qP2C, &px, sizeof (struct pixel), 0);
+		msgsnd (qP2C, &p2cd, sizeof (struct DAT), 0);
 	}
 
 
