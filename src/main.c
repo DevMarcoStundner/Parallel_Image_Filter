@@ -21,6 +21,7 @@
 #define len 80
 #define MSG 4
 
+
 struct pixel 
 {
 	char r;
@@ -54,7 +55,7 @@ int main(int argc, char *argv[])
 	char comment[len];
 	FILE *pImg1;
 
-	/* const char *iarg = NULL;
+	const char *iarg = NULL;
 	const char *oarg = NULL;
     const char *karg = NULL;
 	const char *parg = NULL; 
@@ -66,19 +67,19 @@ int main(int argc, char *argv[])
 
 	while ( (opt = getopt (argc, argv, "p:k:i:o:h")) != -1) {
 		switch (opt) {
-		case 'p':
-			//parg = optarg;
+		case 'p':				//Number of processes
+			parg = optarg;
+			break;	
+		case 'k':				//Kernel
+			karg = optarg;
 			break;
-		case 'k':
-		//	karg = optarg;
+        case 'i':				//Input Image
+			iarg = optarg;
 			break;
-        case 'i':
-		//	iarg = optarg;
+        case 'o':				// Output Image
+			oarg = optarg;
 			break;
-        case 'o':
-		//	oarg = optarg;
-			break;
-		case 'h': 	
+		case 'h': 				// Help
 			print_help();
 			break;
 		case ':':
@@ -93,9 +94,9 @@ int main(int argc, char *argv[])
 	for (; optind < argc; optind++)
 	{
 		printf ("Positional argument %d: %s\n", optind, argv[optind]);
-	} */ 
+	} 
 	
-	pImg1 = fopen("img1.ppm","r");
+	pImg1 = fopen(iarg,"r");
 	if (pImg1 == NULL)
 	{
 		printf("fopen error\n");
@@ -143,7 +144,7 @@ int main(int argc, char *argv[])
 
 	ppid = getpid();
 	pid = 1;
-	for (int j = 1; j <= atoi (argv[1]); j++) {
+	for (int j = 1; j <= atoi (parg); j++) {
     if (pid > 0) {
       pid = fork();
       // -----------------------------------------------------------------------
@@ -159,7 +160,7 @@ int main(int argc, char *argv[])
 		*/
 
 
-        msgsnd (qC2P, &c2pd, sizeof (struct DAT), 0);
+       // msgsnd (qC2P, &c2pd, sizeof (struct DAT), 0);
       }
     }
   }
@@ -171,22 +172,22 @@ int main(int argc, char *argv[])
     struct pixel px[x*y]; 
 	int m = 0;
 
-	for(int i = 0; i <= x*y; i++)
+	// saves img in rgb px
+	while (m != x*y)
 	{
-		px[i].r = input_img[m];
+		int i = 0;
+		px->r = input_img[m];	
 		m++;
-		px[i].g = input_img[m];
+		px->g = input_img[m];
 		m++;
-		px[i].b = input_img[m];
+		px->b = input_img[m];
 		m++;
+		i++;
+		msgsnd (qP2C, &px, sizeof (struct pixel), 0);
 	}
 
 
-
-
-
-
-    for (int k = 1; k <= atoi (argv[1]); k++) {
+    /* for (int k = 1; k <= atoi (argv[1]); k++) {
       p2cd.mtype = k;
       p2cd.m.px[k-1].r = px[k-1].r;
       p2cd.m.px[k-1].g = px[k-1].g;
@@ -194,11 +195,11 @@ int main(int argc, char *argv[])
 
       // send the msg
       msgsnd (qP2C, &p2cd, sizeof (struct DAT), 0);
-    }
+    } */
 
     printf ("Go\n");
 
-    for (int k = 1; k <= atoi (argv[1]); k++) {
+    for (int k = 1; k <= atoi (parg); k++) {
       // receive a reply
       struct DAT prcvDat;
       msgrcv (qC2P, &prcvDat, sizeof (struct DAT), k, 0);
