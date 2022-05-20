@@ -19,6 +19,7 @@
 #include "readimg.h"
 
 
+
 #define len 80
 #define MSG 4
 
@@ -121,7 +122,7 @@ int main(int argc, char *argv[])
 		printf ("Memory not allocated");
 		exit (EXIT_FAILURE);
 	}
-	read_ppm (pImg1, input_img, x, y);
+	read_ppm (pImg1, input_img, x, y, iarg);
 	fclose(pImg1);
 
 
@@ -152,16 +153,22 @@ int main(int argc, char *argv[])
       // ---------------------------------------------------------------- CHILDs
       // 
       if (pid == 0) {
+		
         // receive data from PARENT
         struct DAT crcvDat;
 		struct DAT c2pd; 
 		//takes msg from the queue
-        msgrcv (qP2C, &crcvDat, sizeof (struct DAT), j, 0); 
-
+       if(msgrcv (qP2C, &crcvDat, sizeof (struct DAT), j, 0) == -1)
+	   {
+		   printf("No msg received\n");
+	   }
+		printf("Hallo from Child\n");
 		//px read
 		c2pd.m.px->r = crcvDat.m.px->r;
 		c2pd.m.px->g = crcvDat.m.px->g;
 		c2pd.m.px->b = crcvDat.m.px->b;
+
+		printf("Data: %c",c2pd.m.px->r);
 
 		//mul with kernel
 
@@ -174,6 +181,7 @@ int main(int argc, char *argv[])
   // -------------------------------------------------------------------- PARENT
   //
   if (getpid() == ppid) {
+	printf("Hallo from parent\n");
     struct DAT p2cd; 
 	int m = 0;
 	int i = 0;
@@ -203,10 +211,9 @@ int main(int argc, char *argv[])
       msgsnd (qP2C, &p2cd, sizeof (struct DAT), 0);
     } */
 
-    printf ("Go\n");
-
     for (int k = 1; k <= atoi (parg); k++) {
       // receive a reply
+	  printf("wait for receive\n");
       struct DAT prcvDat;
       msgrcv (qC2P, &prcvDat, sizeof (struct DAT), k, 0);
       // output the received answer

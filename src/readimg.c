@@ -5,12 +5,12 @@
 
 
 
-void read_ppm (FILE *infile, char *p, int x, int y)
+void read_ppm (FILE *infile, char *p, int x, int y, const char *file)
 {   
   int end = 0;
   int count = 0;
   
-  FILE *pImg2 = fopen ("img2.ppm", "wb");
+  FILE *pImg2 = fopen (file, "wb");
   if (pImg2 == NULL)
   {
     printf("fopen write file failed\n");
