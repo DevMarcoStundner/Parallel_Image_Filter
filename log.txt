@@ -1,0 +1,84 @@
+commit dfd9fcffed4c81e719942cbaf5183609a467b038
+Author: Marco Stundner <marco.ms553@gmail.com>
+Date:   Fri May 20 16:01:15 2022 +0000
+
+    after msgrcv in child the code loops inf
+
+commit 51dd8055a8b067d83dd8d61f3431ca90ee6906ea
+Author: Marco Stundner <marco.ms553@gmail.com>
+Date:   Thu May 19 10:59:55 2022 +0000
+
+    updated
+
+commit adee0f61cd07510200fc06ae9481bf33729c9162
+Author: Marco Stundner <marco.ms553@gmail.com>
+Date:   Thu May 19 10:39:26 2022 +0000
+
+    updated
+
+commit f1749c7ae7d0b37eb73a1efd76bfffc5f3bf59e2
+Author: Marco Stundner <marco.ms553@gmail.com>
+Date:   Thu May 12 11:45:10 2022 +0000
+
+    Inputimg in px als rgb werte gespeichert
+
+commit 09a7c54944e0a70775fec0e6264ad56a578f5cd8
+Author: Marco Stundner <marco.ms553@gmail.com>
+Date:   Thu May 12 11:02:38 2022 +0000
+
+    Queue added aus moodle
+
+commit 2968e7ef542092eaf662e2545334f6aafbcd28ba
+Author: Marco Stundner <marco.ms553@gmail.com>
+Date:   Fri May 6 18:00:39 2022 +0000
+
+    Fehler mit dem einlesen gefixt  & msg erstellt
+
+commit bd46a6e57ee050f412416cd6457200d36e984695
+Author: Marco Stundner <marco.ms553@gmail.com>
+Date:   Fri May 6 09:52:25 2022 +0000
+
+    Liest nicht den gesamten Inhalt des Files ins array
+
+commit 44dc11889af9236c1d09e249a8d60e61fae4d368
+Merge: 7b646d0 e1185b9
+Author: Marco Stundner <marco.ms553@gmail.com>
+Date:   Fri Apr 22 14:21:41 2022 +0000
+
+    added .gitignore
+
+commit 7b646d0bdbe07c35498420969e0e44a097e9df45
+Author: Marco Stundner <marco.ms553@gmail.com>
+Date:   Fri Apr 22 14:13:53 2022 +0000
+
+    .gitignore test
+
+commit 33a72706e15eb9fe7b1f5ab0dec509cf6e3d81e6
+Author: Marco Stundner <marco.ms553@gmail.com>
+Date:   Fri Apr 22 14:07:21 2022 +0000
+
+    .c und .h file fuer img added und structs added
+
+commit e1185b9e9551ded452e983c4293ea8a090cc73ae
+Author: DevMarcoStundner <101337732+DevMarcoStundner@users.noreply.github.com>
+Date:   Fri Apr 22 12:08:30 2022 +0000
+
+    Delete main
+
+commit 386ba3c9c5ce686f347ba1807802c8a6acf558fe
+Author: Marco Stundner <marco.ms553@gmail.com>
+Date:   Wed Apr 20 14:50:21 2022 +0000
+
+    optarg added
+
+commit c03710d08b8c4d4663baa43ebde90edcdf55e8ce
+Author: Marco Stundner <marco.ms553@gmail.com>
+Date:   Thu Apr 14 11:43:04 2022 +0000
+
+    added ReadMe
+
+commit 13e475c0a5db8481ef8565c3a7e389e9c0b952d5
+Author: Marco Stundner <marco.ms553@gmail.com>
+Date:   Thu Apr 14 11:25:08 2022 +0000
+
+    Projekt erstellen
